@@ -1,0 +1,41 @@
+on: [push, pull_request]
+name: Test
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: 1.22.x
+    - uses: actions/checkout@v4
+      with:
+         path: './src/github.com/segmentio/gorocksdb'
+    - uses: actions/cache@v4
+      with:
+        path: /home/runner/.cache
+        key: ${{ runner.os }}-go-v4-${{ hashFiles('**/*.go') }}
+        restore-keys: |
+          ${{ runner.os }}-go-v4-
+    # staticcheck needs this for GOPATH
+    - run: |
+        echo "GOPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+        echo "PATH=$GITHUB_WORKSPACE/bin:$PATH" >> $GITHUB_ENV
+    - name: Download dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsnappy-dev
+        go get -t -v ./...
+      working-directory: './src/github.com/segmentio/gorocksdb'
+    - name: Run tests
+      run: |
+        git clone https://github.com/facebook/rocksdb.git /tmp/rocksdb
+        pushd /tmp/rocksdb
+          make clean
+          make shared_lib
+          sudo cp --preserve=links ./librocksdb.* /usr/lib/
+          sudo cp -r ./include/rocksdb/ /usr/include/
+        popd
+        go vet ./...
+        go test -race ./...
+      working-directory: './src/github.com/segmentio/gorocksdb'
