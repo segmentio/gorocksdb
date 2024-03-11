@@ -1,14 +1,14 @@
 package gorocksdb
 
 import (
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/facebookgo/ensure"
 )
 
 func TestColumnFamilyOpen(t *testing.T) {
-	dir, err := ioutil.TempDir("", "gorocksdb-TestColumnFamilyOpen")
+	dir, err := os.MkdirTemp("", "gorocksdb-TestColumnFamilyOpen")
 	ensure.Nil(t, err)
 
 	givenNames := []string{"default", "guide"}
@@ -28,7 +28,7 @@ func TestColumnFamilyOpen(t *testing.T) {
 }
 
 func TestColumnFamilyCreateDrop(t *testing.T) {
-	dir, err := ioutil.TempDir("", "gorocksdb-TestColumnFamilyCreate")
+	dir, err := os.MkdirTemp("", "gorocksdb-TestColumnFamilyCreate")
 	ensure.Nil(t, err)
 
 	opts := NewDefaultOptions()
@@ -53,7 +53,7 @@ func TestColumnFamilyCreateDrop(t *testing.T) {
 }
 
 func TestColumnFamilyBatchPutGet(t *testing.T) {
-	dir, err := ioutil.TempDir("", "gorocksdb-TestColumnFamilyPutGet")
+	dir, err := os.MkdirTemp("", "gorocksdb-TestColumnFamilyPutGet")
 	ensure.Nil(t, err)
 
 	givenNames := []string{"default", "guide"}
@@ -104,7 +104,7 @@ func TestColumnFamilyBatchPutGet(t *testing.T) {
 }
 
 func TestColumnFamilyPutGetDelete(t *testing.T) {
-	dir, err := ioutil.TempDir("", "gorocksdb-TestColumnFamilyPutGet")
+	dir, err := os.MkdirTemp("", "gorocksdb-TestColumnFamilyPutGet")
 	ensure.Nil(t, err)
 
 	givenNames := []string{"default", "guide"}

@@ -1,16 +1,16 @@
 package gorocksdb
 
 import (
-	"github.com/facebookgo/ensure"
-	"io/ioutil"
 	"os"
 	"testing"
+
+	"github.com/facebookgo/ensure"
 )
 
 func TestCheckpoint(t *testing.T) {
 
 	suffix := "checkpoint"
-	dir, err := ioutil.TempDir("", "gorocksdb-"+suffix)
+	dir, err := os.MkdirTemp("", "gorocksdb-"+suffix)
 	ensure.Nil(t, err)
 	err = os.RemoveAll(dir)
 	ensure.Nil(t, err)
@@ -40,8 +40,8 @@ func TestCheckpoint(t *testing.T) {
 	opts := NewDefaultOptions()
 	opts.SetCreateIfMissing(true)
 	dbCheck, err = OpenDb(opts, dir)
-	defer dbCheck.Close()
 	ensure.Nil(t, err)
+	defer dbCheck.Close()
 
 	// test keys
 	var value *Slice

@@ -1,7 +1,7 @@
 package gorocksdb
 
 import (
-	"io/ioutil"
+	"os"
 	"strconv"
 	"testing"
 
@@ -116,7 +116,7 @@ func TestMultiGet(t *testing.T) {
 }
 
 func newTestDB(t *testing.T, name string, applyOpts func(opts *Options)) *DB {
-	dir, err := ioutil.TempDir("", "gorocksdb-"+name)
+	dir, err := os.MkdirTemp("", "gorocksdb-"+name)
 	ensure.Nil(t, err)
 
 	opts := NewDefaultOptions()
@@ -137,12 +137,12 @@ func newTestDBPathNames(t *testing.T, name string, names []string, target_sizes 
 	ensure.DeepEqual(t, len(target_sizes), len(names))
 	ensure.NotDeepEqual(t, len(names), 0)
 
-	dir, err := ioutil.TempDir("", "gorocksdb-"+name)
+	dir, err := os.MkdirTemp("", "gorocksdb-"+name)
 	ensure.Nil(t, err)
 
 	paths := make([]string, len(names))
 	for i, name := range names {
-		dir, err := ioutil.TempDir("", "gorocksdb-"+name)
+		dir, err := os.MkdirTemp("", "gorocksdb-"+name)
 		ensure.Nil(t, err)
 		paths[i] = dir
 	}

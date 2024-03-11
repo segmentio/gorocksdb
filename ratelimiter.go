@@ -25,7 +25,7 @@ func NewNativeRateLimiter(c *C.rocksdb_ratelimiter_t) *RateLimiter {
 }
 
 // Destroy deallocates the RateLimiter object.
-func (self *RateLimiter) Destroy() {
-	C.rocksdb_ratelimiter_destroy(self.c)
-	self.c = nil
+func (r *RateLimiter) Destroy() {
+	C.rocksdb_ratelimiter_destroy(r.c)
+	r.c = nil
 }

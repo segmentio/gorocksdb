@@ -1,7 +1,7 @@
 package gorocksdb
 
 import (
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/facebookgo/ensure"
@@ -94,7 +94,7 @@ func TestTransactionDBCRUD(t *testing.T) {
 }
 
 func newTestTransactionDB(t *testing.T, name string, applyOpts func(opts *Options, transactionDBOpts *TransactionDBOptions)) *TransactionDB {
-	dir, err := ioutil.TempDir("", "gorockstransactiondb-"+name)
+	dir, err := os.MkdirTemp("", "gorockstransactiondb-"+name)
 	ensure.Nil(t, err)
 
 	opts := NewDefaultOptions()

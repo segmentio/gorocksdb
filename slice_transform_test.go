@@ -36,7 +36,6 @@ func TestFixedPrefixTransformOpen(t *testing.T) {
 }
 
 type testSliceTransform struct {
-	initiated bool
 }
 
 func (st *testSliceTransform) Name() string                { return "gorocksdb.test" }
