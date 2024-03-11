@@ -647,9 +647,9 @@ func (db *DB) DisableFileDeletions() error {
 }
 
 // EnableFileDeletions enables file deletions for the database.
-func (db *DB) EnableFileDeletions() error {
+func (db *DB) EnableFileDeletions(force bool) error {
 	var cErr *C.char
-	C.rocksdb_enable_file_deletions(db.c, &cErr)
+	C.rocksdb_enable_file_deletions(db.c, boolToChar(force), &cErr)
 	if cErr != nil {
 		defer C.free(unsafe.Pointer(cErr))
 		return errors.New(C.GoString(cErr))
