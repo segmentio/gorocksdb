@@ -48,6 +48,15 @@ func (opts *BlockBasedTableOptions) Destroy() {
 	opts.compCache = nil
 }
 
+// SetFilterPolicy sets the filter policy opts reduce disk reads.
+// Many applications will benefit from passing the result of
+// NewBloomFilterPolicy() here.
+// Default: nil
+func (opts *BlockBasedTableOptions) SetFilterPolicy(fp FilterPolicy) {
+	opts.cFp = fp.c
+	C.rocksdb_block_based_options_set_filter_policy(opts.c, opts.cFp)
+}
+
 // SetCacheIndexAndFilterBlocks is indicating if we'd put index/filter blocks to the block cache.
 // If not specified, each "table reader" object will pre-load index/filter
 // block during table initialization.
