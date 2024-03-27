@@ -2,7 +2,7 @@ on: [push, pull_request]
 name: Test
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Install Go
       uses: actions/setup-go@v5
@@ -29,16 +29,16 @@ jobs:
       working-directory: './src/github.com/segmentio/gorocksdb'
     - name: Run tests
       run: |
-        # 8.9.1 was just the most recent version on March, 2024.
-        git clone --depth=1 --branch=v8.9.1 https://github.com/facebook/rocksdb.git /tmp/rocksdb
+        # 8.11.3 was just the most recent version on March, 2024.
+        git clone --depth=1 --branch=v8.11.3 https://github.com/facebook/rocksdb.git /tmp/rocksdb
         pushd /tmp/rocksdb
-          git checkout v8.9.1
+          git checkout v8.11.3
           make clean
           make shared_lib
           sudo cp --preserve=links ./librocksdb.* /usr/lib/
           sudo cp -r ./include/rocksdb/ /usr/include/
         popd
         go vet ./...
-        go run honnef.co/go/tools/cmd/staticcheck@latest ./...
+        go run -trimpath honnef.co/go/tools/cmd/staticcheck@latest ./...
         go test -trimpath -v -race ./...
       working-directory: './src/github.com/segmentio/gorocksdb'
