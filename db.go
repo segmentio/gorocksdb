@@ -608,6 +608,18 @@ func (db *DB) GetLiveFilesMetaData() []LiveFileMetadata {
 	return liveFiles
 }
 
+// LiveFilesSize returns the size of all live files.
+func (db *DB) LiveFilesSize() int64 {
+	lf := C.rocksdb_livefiles(db.c)
+	defer C.rocksdb_livefiles_destroy(lf)
+	count := C.rocksdb_livefiles_count(lf)
+	size := int64(0)
+	for i := C.int(0); i < count; i++ {
+		size += int64(C.rocksdb_livefiles_size(lf, i))
+	}
+	return size
+}
+
 // CompactRange runs a manual compaction on the Range of keys given. This is
 // not likely to be needed for typical usage.
 func (db *DB) CompactRange(r Range) {
